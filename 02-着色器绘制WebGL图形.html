@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <canvas id="cvs" width="200" height="200" style="border: dashed 1px red">
+      你的浏览器不支持Canvas画布元素
+    </canvas>
+
+    <script>
+      // 获取画布元素
+      let cvs = document.getElementById("cvs");
+
+      // 获取元素的上下文环境对象
+      const gl = cvs.getContext("webgl");
+
+      // 顶点着色器变量
+      const VSHADER_SOURCE = `
+      void main(){
+        gl_Position = vec4(0.0,0.0,0.0,1.0);
+        gl_PointSize = 10.0; 
+      }`;
+
+      // 片段着色器变量
+      const FSHADER_SOURCE = `
+      void main(){
+        gl_FragColor = vec4(0.0,1.0,0.0,1.0);
+      }`;
+
+      // 新建用于装载顶点字符串的着色器对象
+      const vertShader = gl.createShader(gl.VERTEX_SHADER);
+
+      // 加载保存好的顶点字符串变量
+      gl.shaderSource(vertShader, VSHADER_SOURCE);
+
+      // 编译顶点着色器
+      gl.compileShader(vertShader);
+
+      // 新建用于装载片段字符串的着色器对象
+      const fragShader = gl.createShader(gl.FRAGMENT_SHADER);
+
+      // 加载保存好的片段字符串变量
+      gl.shaderSource(fragShader, FSHADER_SOURCE);
+
+      // 编译片段着色器
+      gl.compileShader(fragShader);
+
+      // 新建程序附加编译完成的着色器对象
+      const shaderProgram = gl.createProgram();
+      gl.attachShader(shaderProgram, vertShader);
+      gl.attachShader(shaderProgram, fragShader);
+
+      // 链接两个附加好的着色器程序
+      gl.linkProgram(shaderProgram);
+
+      // 开启程序使用
+      gl.useProgram(shaderProgram);
+
+      // 绘制
+      gl.drawArrays(gl.POINTS, 0, 1);
+    </script>
+  </body>
+</html>
